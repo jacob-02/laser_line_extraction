@@ -1,20 +1,25 @@
 <launch>
   <node name="line_extractor" pkg="laser_line_extraction" type="line_extraction_node">
     <param name="~frequency" value="30.0" />
-    <param name="~frame_id" value="laser" />
-    <param name="~scan_topic" value="scan" />
+    <param name="~frame_id" value="r1/base_laser" />
+    <param name="~scan_topic" value="station_scan" />
     <param name="~publish_markers" value="true" />
     <param name="~bearing_std_dev" value="1e-5" />
     <param name="~range_std_dev" value="0.012" />
     <param name="~least_sq_angle_thresh" value="0.0001" />
     <param name="~least_sq_radius_thresh" value="0.0001" />
     <param name="~max_line_gap" value="0.5" />
-    <param name="~min_line_length" value="0.7" />
+    <param name="~min_line_length" value="0.2" />
     <param name="~min_range" value="0.5" />
-    <param name="~max_range" value="250.0" />
+    <param name="~max_range" value="2.0" />
     <param name="~min_split_dist" value="0.04" />
     <param name="~outlier_dist" value="0.06" />
     <param name="~min_line_points" value="10" />
   </node>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find laser_line_extraction)/rviz/rviz.rviz"/>
+  <node pkg="rosbag" type="play" name="player" output="screen" args="$(find laser_line_extraction)/test/station.bag"/>
+  <node pkg="navigation" type="station.py" name="new_scan" args="$(find laser_line_extraction)/scripts/station.py"/>
+  <node pkg="navigation" type="station_move.py" name="scan_data_station" args="$(find laser_line_extraction)/scripts/station_move.py"/>
+  
 </launch>
 
